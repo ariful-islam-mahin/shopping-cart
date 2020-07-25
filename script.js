@@ -1,54 +1,38 @@
-// subtotal, tax, total
-var subtotal = document.getElementById('subtotal');
-var tax = document.getElementById('tax');
-var total = document.getElementById('total')
-
-// minus function
-function minus(price, inputId, priceId) {
-    inputNumber = parseFloat(inputId.value);
-    inputNumber --;
-    inputId.value = inputNumber;
-    priceId.innerText = price * parseFloat(inputId.value);
-    subtotal.innerText = parseFloat(price1.innerText) + parseFloat(price2.innerText);
-    tax.innerText = parseFloat(subtotal.innerText) / 100;
-    total.innerText = parseFloat(subtotal.innerText) + parseFloat(tax.innerText)
+function handleProductChange(product, creaseBtn) {
+    const productCount = getInputValue(product);
+    let productNewCount = productCount;
+    if(creaseBtn == true){
+        productNewCount = productCount + 1
+    }
+    else if(creaseBtn == false && productCount >1){
+        productNewCount = productCount - 1
+    }
+    document.getElementById(product + '-count').value= productNewCount;
+    let productPrice = 0;
+    if(product == 'phone'){
+        productPrice = productNewCount * 1219
+    }
+    else if(product == 'case'){
+        productPrice = productNewCount * 59
+    }
+    document.getElementById(product + '-price').innerText = productPrice;
+    calculateTotal()
 }
 
-// plus function
-function plus(price, inputId, priceId) {
-    inputNumber = parseFloat(inputId.value);
-    inputNumber ++;
-    inputId.value = inputNumber;
-    priceId.innerText = price * parseFloat(inputId.value);
-    subtotal.innerText = parseFloat(price1.innerText) + parseFloat(price2.innerText);
-    tax.innerText = parseInt(subtotal.innerText/ 100) ;
-    total.innerText = parseFloat(subtotal.innerText) + parseFloat(tax.innerText)
+function calculateTotal(params) {
+    const phoneCount = getInputValue('phone');
+    const caseCount = getInputValue('case');
+
+    const subtotal = phoneCount * 1219 + caseCount * 59;
+    document.getElementById('subtotal').innerText = subtotal;
+
+    const tax = Math.round(subtotal * 0.1);
+    document.getElementById('tax').innerText = tax;
+
+    const total = subtotal + tax;
+    document.getElementById('total').innerText = total;
 }
 
-// phone price calculation
-var minusBtn1 = document.getElementById('minusBtn1');
-var plusBtn1 = document.getElementById('plusBtn1');
-var input1 = document.getElementById('input1');
-var price1 = document.getElementById('price1');
-
-document.getElementById('minusBtn1').addEventListener('click', function(){
-    minus(1219, input1, price1)
-})
-document.getElementById('plusBtn1').addEventListener('click', function(){
-    plus(1219, input1, price1)
-})
-
-// case price calculation
-var minusBtn2 = document.getElementById('minusBtn2');
-var plusBtn2 = document.getElementById('plusBtn2');
-var input2 = document.getElementById('input2');
-var price2 = document.getElementById('price2');
-
-document.getElementById('minusBtn2').addEventListener('click', function(){
-    minus(9, input2, price2)
-})
-document.getElementById('plusBtn2').addEventListener('click', function(){
-    plus(9, input2, price2)
-})
-
-
+function getInputValue(product) {
+    return (parseInt(document.getElementById(product + '-count').value))
+}
